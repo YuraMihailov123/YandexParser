@@ -1,9 +1,9 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "Test1234";
-$dbname = "MarketDB";
+$servername = "localhost";
+$username = "root";
+$password = "Test1234";
+$dbname = "MarketDB";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 echo 'Connected successfully';
 
 $q = $_REQUEST["q"]; // - получаем запрос, который отправили с локалхоста парсека
-
+echo "<script>console.log('". $q ."' );</script>";
 if ($q !== "") { // - если не пустой то выполняем запрос
 	if ($conn->query($q) === TRUE) {
     		echo "New record created successfully";
