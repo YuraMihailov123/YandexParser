@@ -19,30 +19,104 @@ function httpGet()
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(xmlhttp.responseText, 'text/html');
             console.log(htmlDoc);
-            var oldPrice = htmlDoc.getElementsByClassName('_1Hw8N')[0].textContent;
-            var discount = htmlDoc.getElementsByClassName('_2tBiP')[0].textContent;
-            var newPrice = htmlDoc.getElementsByClassName('_3NaXx _3kWlK')[0].childNodes[0].childNodes[0].textContent;
-            var nameProduct = htmlDoc.getElementsByClassName('_1BWd_ _2OAAC undefined')[0].textContent;
-            var feedbacksCount = htmlDoc.getElementsByClassName('_2f75n _2J5l3 _15qW8 cia-cs')[0].textContent;
-            var rating = htmlDoc.getElementsByClassName('_2v4E8')[0].textContent;
-            var buysCount = htmlDoc.getElementsByClassName('_2aYNE _2WAk7')[0].textContent;
-            var delivery = htmlDoc.getElementsByClassName('_2EUCN _1vuPp')[0].textContent;
-            delivery += "\n" + htmlDoc.getElementsByClassName('_3q9zn')[0].textContent;
-            var questionsCount = htmlDoc.getElementsByClassName('_2f75n _1SqIf _3HzLQ cia-cs')[0].textContent;
-            if(questionsCount.startsWith("Задать")){ // Если получили строку "Задать вопрос", то значит вопросов 0
-                questionsCount = "0 вопросов";
+            //Ca_h1
+
+            var oldPriceElement = htmlDoc.getElementsByClassName('_1Hw8N')[0];
+            var oldPrice = "";
+            if(oldPriceElement != null) {
+                oldPrice = htmlDoc.getElementsByClassName('_1Hw8N')[0].textContent;
+            }else {
+                oldPrice = "Нет информации или товар отсутствует!";
             }
+
+            var discountElement = htmlDoc.getElementsByClassName('_2tBiP')[0];
+            var discount = "";
+            if(discountElement != null) {
+                discount = htmlDoc.getElementsByClassName('_2tBiP')[0].textContent;
+            }else {
+                discount = "Информация отсутствует или нет скидки на товар!";
+            }
+
+            var newPriceElement = htmlDoc.getElementsByClassName('_3NaXx _3kWlK')[0];
+            var newPrice = "";
+            if(newPriceElement != null) {
+                newPrice = htmlDoc.getElementsByClassName('_3NaXx _3kWlK')[0].childNodes[0].childNodes[0].textContent;
+            }else {
+                newPrice = "Нет информации или товар отсутствует!";
+            }
+
+            var nameProductElement = htmlDoc.getElementsByClassName('_1BWd_ _2OAAC undefined')[0];
+            var nameProduct = "";
+            if(nameProductElement != null) {
+                nameProduct = htmlDoc.getElementsByClassName('_1BWd_ _2OAAC undefined')[0].textContent;
+            }else {
+                nameProduct = "Нет информации о названии товара!";
+            }
+
+            var feedbacksCountElement = htmlDoc.getElementsByClassName('_2f75n _2J5l3 _15qW8 cia-cs')[0];
+            var feedbacksCount = "";
+            if(feedbacksCountElement != null) {
+                feedbacksCount = htmlDoc.getElementsByClassName('_2f75n _2J5l3 _15qW8 cia-cs')[0].textContent;
+            }else{
+                feedbacksCount = "Нет информации об отзывах товара!";
+            }
+
+            var ratingElement = htmlDoc.getElementsByClassName('_2v4E8')[0];
+            var rating = "";
+            if(ratingElement != null) {
+                rating = htmlDoc.getElementsByClassName('_2v4E8')[0].textContent;
+            }else{
+                rating = "Нет информации о рейтинге товара!";
+            }
+
+            var buysCountElement = htmlDoc.getElementsByClassName('_2aYNE _2WAk7')[0];
+            var buysCount = "";
+            if(buysCountElement != null) {
+                buysCount = htmlDoc.getElementsByClassName('_2aYNE _2WAk7')[0].textContent;
+            }else {
+                buysCount = "Нет информации о кол-ве покупок товара!";
+            }
+
+            var deliveryElement = htmlDoc.getElementsByClassName('_2EUCN _1vuPp')[0];
+            var delivery = "";
+            if(deliveryElement != null) {
+                delivery = htmlDoc.getElementsByClassName('_2EUCN _1vuPp')[0].textContent;
+            } else {
+                delivery = "Нет информации о самовывозе!";
+            }
+            deliveryElement = htmlDoc.getElementsByClassName('_3q9zn')[0];
+            if(deliveryElement != null) {
+                delivery += "\n" + htmlDoc.getElementsByClassName('_3q9zn')[0].textContent;
+            }else {
+                delivery += "Нет информации о доставке со склада!";
+            }
+
+            var questionsCountElement = htmlDoc.getElementsByClassName('_2f75n _1SqIf _3HzLQ cia-cs')[0].textContent;
+            var questionsCount = "";
+            if(questionsCountElement != null) {
+                questionsCount = htmlDoc.getElementsByClassName('_2f75n _1SqIf _3HzLQ cia-cs')[0].textContent;
+                if(questionsCount.startsWith("Задать")){ // Если получили строку "Задать вопрос", то значит вопросов 0
+                    questionsCount = "0 вопросов";
+                }
+            }else {
+                questionsCount = "Нет информации о кол-ве вопросов товара!";
+            }
+
+
             var aboutArr = htmlDoc.getElementsByClassName('_3l91C');
-            var aboutProduct = "";
-            for (var i=0;i<aboutArr.length;i++)
-            {
-                aboutProduct += aboutArr[i].textContent + "\n";
+            if(aboutArr != null) {
+                var aboutProduct = "";
+                for (var i = 0; i < aboutArr.length; i++) {
+                    aboutProduct += aboutArr[i].textContent + "\n";
+                }
+            }else {
+                aboutProduct = "Нет информации о товаре!";
             }
             //формируем запрос на добавление записи в таблицу Продуктов
             var sqlQuery = "\"INSERT INTO Products (nameProduct, oldPrice, discount, newPrice, feedbacksCount, rating, buysCount, delivery, questionsCount, aboutProduct)\n" +
                 "VALUES ('"+nameProduct+"', '"+oldPrice+"', '"+discount+"', '"+newPrice+"', '"+feedbacksCount+"', '"+rating+"', '"+buysCount+"', '"+delivery+"', '"+questionsCount+"', '"+aboutProduct+"')\";"
             //отправляем запрос в php-скрипт, который и делает запись в бд
-            writeDataToDB(sqlQuery);
+            //writeDataToDB(sqlQuery);
             console.log(sqlQuery);
             alert("Данные записаны");
             return xmlhttp.responseText;
