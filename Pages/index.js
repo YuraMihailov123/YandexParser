@@ -88,7 +88,7 @@ function httpGet()
             if(deliveryElement != null) {
                 delivery += "\n" + htmlDoc.getElementsByClassName('_3q9zn')[0].textContent;
             }else {
-                delivery += "Нет информации о доставке со склада!";
+                delivery += "\nНет информации о доставке со склада!";
             }
 
             var questionsCountElement = htmlDoc.getElementsByClassName('_2f75n _1SqIf _3HzLQ cia-cs')[0].textContent;
