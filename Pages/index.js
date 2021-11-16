@@ -112,17 +112,17 @@ function httpGet()
             }else {
                 aboutProduct = "Нет информации о товаре!";
             }
+
             //формируем запрос на добавление записи в таблицу Продуктов
-            var sqlQuery = "\"INSERT INTO Products (nameProduct, oldPrice, discount, newPrice, feedbacksCount, rating, buysCount, delivery, questionsCount, aboutProduct)\n" +
-                "VALUES ('"+nameProduct+"', '"+oldPrice+"', '"+discount+"', '"+newPrice+"', '"+feedbacksCount+"', '"+rating+"', '"+buysCount+"', '"+delivery+"', '"+questionsCount+"', '"+aboutProduct+"')\";"
+            var sqlQuery = "INSERT INTO Products (nameProduct, oldPrice, discount, newPrice, feedbacksCount, rating, buysCount, delivery, questionsCount, aboutProduct) VALUES ('"+nameProduct+"', '"+oldPrice+"', '"+discount+"', '"+newPrice+"', '"+feedbacksCount+"', '"+rating+"', '"+buysCount+"', '"+delivery+"', '"+questionsCount+"', '"+aboutProduct+"');";
             //отправляем запрос в php-скрипт, который и делает запись в бд
             writeDataToDB(sqlQuery);
             console.log(sqlQuery);
-            alert("Данные записаны");
+
             return xmlhttp.responseText;
         }
     }
-    xmlhttp.open("GET", theUrl, true );
+    xmlhttp.open("GET", theUrl, false );
     xmlhttp.send();
 }
 
@@ -130,11 +130,12 @@ function writeDataToDB(str){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            console.log(this.responseText);
+            console.log(this.responseText + " done");
+            alert("Данные записаны");
         }
     };
     //делаем запрос в php-скрипт с параметром sql-запроса 'q' ( в php-скрипте как раз таки получаем эту 'q')
-    xmlhttp.open("POST", "writeToDatabase.php?q=" + str, true);
+    xmlhttp.open("POST", "http://localhost/writeToDatabase.php?q=" + str, true);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xmlhttp.send();
 }

@@ -7,20 +7,22 @@ $dbname = "MarketDB";
 
 $conn = mysqli_connect($servername, $username, $password, $dbname);
 if (!$conn) {
+  echo "<script>console.log('". mysqli_connect_error() ."' );</script>";
   die("Connection failed: " . mysqli_connect_error());
 } //- коннектимся к бд с нашими данными сервера, юзера, пароля и бд
 
 echo 'Connected successfully';
 
-$q = $_REQUEST["q"]; // - получаем запрос, который отправили с локалхоста парсека
-echo "<script>console.log('". $q ."' );</script>";
+$q = $_POST["q"];
+echo "req - ". $q;
 if ($q !== "") { // - если не пустой то выполняем запрос
-	if ($conn->query($q) === TRUE) {
+	//if ($conn->query($q) === TRUE) {
+	if(mysqli_query($conn,$q)){
     		echo "New record created successfully";
 	} else {
     		echo "Error: " . $q . "<br>" . $conn->error;
 	}
 }
 
-$conn->close();
+mysqli_close($conn);
 ?>
